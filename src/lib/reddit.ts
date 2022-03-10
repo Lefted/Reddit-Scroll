@@ -1,23 +1,23 @@
 // talk to the reddit api
-import EnvUtil from '$lib/envUtil';
-import { APP_NAME, APP_VERSION, APP_AUTHOR } from '../app.constants';
+import EnvUtil from "$lib/envUtil";
+import { APP_NAME, APP_VERSION, APP_AUTHOR } from "../app-constants";
 
-const REDDIT_USERNAME = EnvUtil.env('REDDIT_USERNAME');
-const REDDIT_PASSWORD = EnvUtil.env('REDDIT_PASSWORD');
-const REDDIT_CLIENT_ID = EnvUtil.env('REDDIT_CLIENT_ID');
-const REDDIT_SECRET = EnvUtil.env('REDDIT_SECRET');
+const REDDIT_USERNAME = EnvUtil.env("REDDIT_USERNAME");
+const REDDIT_PASSWORD = EnvUtil.env("REDDIT_PASSWORD");
+const REDDIT_CLIENT_ID = EnvUtil.env("REDDIT_CLIENT_ID");
+const REDDIT_SECRET = EnvUtil.env("REDDIT_SECRET");
 
 let authentication;
 
 export async function authenticate() {
 	try {
-		const res = await fetch('https://www.reddit.com/api/v1/access_token', {
-			method: 'POST',
+		const res = await fetch("https://www.reddit.com/api/v1/access_token", {
+			method: "POST",
 			headers: {
-				'Content-Type': 'application/x-www-form-urlencoded',
-				'User-Agent': getUserAgent(),
+				"Content-Type": "application/x-www-form-urlencoded",
+				"User-Agent": getUserAgent(),
 				Authorization:
-					'Basic ' + Buffer.from(`${REDDIT_CLIENT_ID}:${REDDIT_SECRET}`).toString('base64')
+					"Basic " + Buffer.from(`${REDDIT_CLIENT_ID}:${REDDIT_SECRET}`).toString("base64")
 			},
 			body: `grant_type=password&username=${REDDIT_USERNAME}&password=${REDDIT_PASSWORD}`
 		});
@@ -46,8 +46,8 @@ export async function getPost(postId) {
 	try {
 		const res = await fetch(`https://oauth.reddit.com/by_id/${postId}`, {
 			headers: {
-				Authorization: 'bearer ' + (await getAccessToken()),
-				'User-Agent': getUserAgent()
+				Authorization: "bearer " + (await getAccessToken()),
+				"User-Agent": getUserAgent()
 			}
 		});
 		if (res.status != 200) return [res.statusText, null];
@@ -69,7 +69,7 @@ export async function getImage(postId) {
 		console.log(data);
 		// TODO maybe assert on media_embed
 		const isValid =
-			item.data.children[0].kind == 't3' &&
+			item.data.children[0].kind == "t3" &&
 			data.media_embed &&
 			data.thumbnail_width &&
 			data.thumbnail_height &&
@@ -80,7 +80,7 @@ export async function getImage(postId) {
 		// data.title &&
 		// data.is_video == false;
 
-		if (!isValid) return [{ message: 'invalid post' }, null];
+		if (!isValid) return [{ message: "invalid post" }, null];
 
 		const imageData = {
 			imgUrl: data.url,

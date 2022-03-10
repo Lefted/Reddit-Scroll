@@ -1,8 +1,8 @@
-<script>
+<script lang="ts">
 	export let postId;
 
 	async function loadCard() {
-		const res = await fetch('/api/image/' + postId);
+		const res = await fetch("/api/image/" + postId);
 		const text = await res.text();
 		console.log(res);
 		const json = JSON.stringify(res);

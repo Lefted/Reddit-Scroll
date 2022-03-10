@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import InfiniteLoading from 'svelte-infinite-loading';
 	import VirtualList from 'svelte-tiny-virtual-list';
 	import Card from '../lib/components/Card.svelte';

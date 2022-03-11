@@ -2,7 +2,7 @@ import { browser } from '$app/env';
 import dotenv from 'dotenv';
 
 class EnvUtil {
-	static instance;
+	static instance: EnvUtil;
 
 	constructor() {
 		if (!browser) {
@@ -10,14 +10,14 @@ class EnvUtil {
 		}
 	}
 
-	static getInstance() {
+	static getInstance(): EnvUtil {
 		if (!EnvUtil.instance) {
 			EnvUtil.instance = new EnvUtil();
 		}
 		return EnvUtil.instance;
 	}
 
-	env(name) {
+	env(name: string) {
 		if (browser) return undefined;
 		return process.env[name];
 	}

@@ -137,7 +137,7 @@ export interface AuthorFlairRichtext {
 }
 
 export async function getLink(linkId): Promise<string | Link> {
-	const res = await fetch(`https://oauth.reddit.com/by_id/${linkId}`, {
+	const res = await fetch(`https://oauth.reddit.com/by_id/t3_${linkId}`, {
 		headers: {
 			Authorization: "bearer " + (await getAccessToken()),
 			"User-Agent": getUserAgent()

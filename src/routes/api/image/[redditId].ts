@@ -1,6 +1,7 @@
 import { extractImage, getLink } from '$lib/reddit';
 import type { Link } from '$lib/reddit';
 
+/** @type {import('./[id]').RequestHandler} */
 export async function get({ params }) {
 	const link = await getLink(params.redditId);
 

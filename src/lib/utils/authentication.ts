@@ -30,8 +30,10 @@ export async function authenticate(): Promise<string> {
 		},
 		body: `grant_type=password&username=${REDDIT_USERNAME}&password=${REDDIT_PASSWORD}`
 	});
+
 	const json: AuthResponse = await res.json();
-	return json.access_token;
+	accessToken = json.access_token;
+	return accessToken;
 }
 
 export async function getAccessToken(): Promise<string> {

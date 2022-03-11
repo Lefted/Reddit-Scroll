@@ -9,6 +9,8 @@
 		if (!res.ok) throw new Error("Failed to load image");
 
 		const image: Image = await res.json();
+		if (image == null) throw new Error("Failed to load image");
+
 		return image;
 	}
 </script>

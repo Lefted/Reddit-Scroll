@@ -1,18 +1,18 @@
-import { getImage } from '../../../lib/reddit';
+import { extractImage, getLink } from '$lib/reddit';
+import type { Link } from '$lib/reddit';
 
 export async function get({ params }) {
-	const [errors, item] = await getImage(params.redditId);
-	console.log(errors);
-	console.log(item);
+	const link = await getLink(params.redditId);
 
-	if (errors) {
+	if (link as Link) {
+		const image = extractImage(link as Link);
 		return {
-			status: 400,
-			body: { errors }
-		};
+			body: image
+		}
 	} else {
 		return {
-			body: item
+			status: 400,
+			body: link
 		};
 	}
 }

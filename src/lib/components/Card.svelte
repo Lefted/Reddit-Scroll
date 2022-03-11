@@ -1,18 +1,15 @@
 <script lang="ts">
-	export let postId;
+	import type { Image } from "$lib/reddit";
 
-	async function loadCard() {
-		const res = await fetch("/api/image/" + postId);
-		const text = await res.text();
-		console.log(res);
-		const json = JSON.stringify(res);
+	export let postId: string;
 
-		console.log(json);
-		if (res.ok) {
-			return JSON.parse(text);
-		} else {
-			throw new Error(text);
-		}
+	async function loadCard(): Promise<Image> {
+		const res: Response = await fetch("/api/image/" + postId);
+
+		if (!res.ok) throw new Error("Failed to load image");
+
+		const image: Image = await res.json();
+		return image;
 	}
 </script>
 
@@ -21,7 +18,7 @@
 		<p>loading..</p>
 	{:then card}
 		<h1>{card.title}</h1>
-		<img src={card.imgUrl} alt="reddit post" />
+		<img src={card.url} alt="reddit post" />
 	{:catch error}
 		<p>{error}</p>
 	{/await}

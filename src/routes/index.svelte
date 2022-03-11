@@ -1,38 +1,38 @@
 <script lang="ts">
-	import InfiniteLoading from 'svelte-infinite-loading';
-	import VirtualList from 'svelte-tiny-virtual-list';
-	import Card from '../lib/components/Card.svelte';
+	import InfiniteLoading from "svelte-infinite-loading";
+	import VirtualList from "svelte-tiny-virtual-list";
+	import Card from "../lib/components/Card.svelte";
 
-	export let posts;
+	// export let posts;
 	// console.log(posts);
 
 	let data = [
-		'A',
-		'B',
-		'C',
-		'D',
-		'E',
-		'F',
-		'G',
-		'H',
-		'I',
-		'J',
-		'K',
-		'L',
-		'M',
-		'N',
-		'O',
-		'P',
-		'Q',
-		'R',
-		'S',
-		'T',
-		'U',
-		'V',
-		'W',
-		'X',
-		'Y',
-		'Z'
+		"A",
+		"B",
+		"C",
+		"D",
+		"E",
+		"F",
+		"G",
+		"H",
+		"I",
+		"J",
+		"K",
+		"L",
+		"M",
+		"N",
+		"O",
+		"P",
+		"Q",
+		"R",
+		"S",
+		"T",
+		"U",
+		"V",
+		"W",
+		"X",
+		"Y",
+		"Z"
 	];
 
 	function infiniteHandler({ detail: { complete, error } }) {
@@ -40,26 +40,26 @@
 			// http request here
 
 			const newData = [
-				'G',
-				'H',
-				'I',
-				'J',
-				'K',
-				'L',
-				'M',
-				'N',
-				'O',
-				'P',
-				'Q',
-				'R',
-				'S',
-				'T',
-				'U',
-				'V',
-				'W',
-				'X',
-				'Y',
-				'Z'
+				"G",
+				"H",
+				"I",
+				"J",
+				"K",
+				"L",
+				"M",
+				"N",
+				"O",
+				"P",
+				"Q",
+				"R",
+				"S",
+				"T",
+				"U",
+				"V",
+				"W",
+				"X",
+				"Y",
+				"Z"
 			];
 
 			data = [...data, ...newData];

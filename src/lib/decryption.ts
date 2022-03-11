@@ -10,7 +10,7 @@ if (!INITIALIZATION_VECTOR) {
 
 const ivBuffer = Buffer.from(INITIALIZATION_VECTOR, 'hex');
 
-export default async function decryptString(message, keyBuffer) {
+export default async function decryptString(message, keyBuffer): Promise<string> {
 	const decipher = createDecipheriv('aes256', keyBuffer, ivBuffer);
 	const decryptedMessage = decipher.update(message, 'hex', 'utf8') + decipher.final('utf8');
 	return decryptedMessage;

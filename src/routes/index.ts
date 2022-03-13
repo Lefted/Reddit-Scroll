@@ -1,7 +1,10 @@
 import { PrismaClient } from '@prisma/client';
-import type { CipherKey } from 'crypto';
+import { getLogger } from '$utils/logging';
 import decryptString from '$lib/utils/decryption';
+import type { CipherKey } from 'crypto';
+import type { post } from '@prisma/client';
 
+const logger = getLogger('routes:index');
 const prisma = new PrismaClient();
 
 const keyBuffer: CipherKey = Buffer.from(
@@ -9,23 +12,23 @@ const keyBuffer: CipherKey = Buffer.from(
 	'hex'
 );
 
-// export async function get() {
-// 	try {
-// 		let posts = await prisma.posts.findMany();
-// 		posts = posts.map(async (post) => ({
-// 			redditId: await decryptString(post.redditId, keyBuffer),
-// 			...post
-// 		}));
-// 		await Promise.all(posts);
+export async function get() {
+	try {
+		const postsEncrypted = await prisma.post.findMany();
+		const posts = postsEncrypted.map(async (post) => ({
+			redditId: await decryptString(post.redditId, keyBuffer),
+			...post
+		} as post));
+		await Promise.all(posts);
 
-// 		return {
-// 			body: { posts }
-// 		};
-// 	} catch (error) {
-// 		console.error('Unable to query from the database:', error);
-// 		return {
-// 			status: 500,
-// 			body: { error: 'Fetching posts from the database failed' }
-// 		};
-// 	}
-// }
+		return {
+			body: { posts }
+		};
+	} catch (error) {
+		logger.error(`Fetching posts from the database failed: ${error}`);
+		return {
+			status: 500,
+			body: { error: 'Fetching posts from the database failed' }
+		};
+	}
+}

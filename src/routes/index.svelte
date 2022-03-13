@@ -2,38 +2,9 @@
 	import InfiniteLoading from "svelte-infinite-loading";
 	import VirtualList from "svelte-tiny-virtual-list";
 	import Card from "../lib/components/Card.svelte";
+	import type { post } from "@prisma/client";
 
-	// export let posts;
-	// console.log(posts);
-
-	let data = [
-		"A",
-		"B",
-		"C",
-		"D",
-		"E",
-		"F",
-		"G",
-		"H",
-		"I",
-		"J",
-		"K",
-		"L",
-		"M",
-		"N",
-		"O",
-		"P",
-		"Q",
-		"R",
-		"S",
-		"T",
-		"U",
-		"V",
-		"W",
-		"X",
-		"Y",
-		"Z"
-	];
+	export let posts: post[];
 
 	function infiniteHandler({ detail: { complete, error } }) {
 		try {
@@ -62,7 +33,7 @@
 				"Z"
 			];
 
-			data = [...data, ...newData];
+			// data = [...data, ...newData];
 			complete();
 		} catch (e) {
 			error(e);

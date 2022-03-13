@@ -1,5 +1,9 @@
-import EnvUtil from "$lib/envUtil";
+// authentication against reddit api
+import EnvUtil from "$lib/utils/environment";
 import { getUserAgent } from "$lib/reddit";
+import { getLogger } from "$utils/logging";
+
+const logger = getLogger("authentication");
 
 const REDDIT_USERNAME: string = EnvUtil.env("REDDIT_USERNAME");
 const REDDIT_PASSWORD: string = EnvUtil.env("REDDIT_PASSWORD");
@@ -11,6 +15,7 @@ const AUTH_ENDPOINT = `${AUTH_BASE_ENDPOINT}v1/access_token`;
 
 let accessToken: string;
 
+
 export interface AuthResponse {
 	access_token: string;
 	token_type: string;
@@ -20,7 +25,8 @@ export interface AuthResponse {
 }
 
 export async function authenticate(): Promise<string> {
-	const res: Response = await fetch(AUTH_ENDPOINT, {
+	logger.info(`requesting accessToken ${AUTH_ENDPOINT}`)
+	const res = await fetch(AUTH_ENDPOINT, {
 		method: "POST",
 		headers: {
 			"Content-Type": "application/x-www-form-urlencoded",
@@ -31,11 +37,16 @@ export async function authenticate(): Promise<string> {
 		body: `grant_type=password&username=${REDDIT_USERNAME}&password=${REDDIT_PASSWORD}`
 	});
 
+	if (!res.ok) {
+		logger.error(`failed to authenticate: ${res.status} ${res.statusText}`)
+		return null;
+	}
+
 	const json: AuthResponse = await res.json();
 	accessToken = json.access_token;
 	return accessToken;
 }
 
 export async function getAccessToken(): Promise<string> {
-	return accessToken ?? (accessToken = await authenticate());
+	return accessToken ?? await authenticate();
 }

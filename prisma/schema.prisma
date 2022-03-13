@@ -7,8 +7,8 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model post {
-  id        Int      @id(map: "posts_pkey") @default(autoincrement())
+model link {
+  id        Int      @id @default(autoincrement())
   redditId  String?  @db.VarChar(255)
   createdAt DateTime @db.Timestamptz(6)
   updatedAt DateTime @db.Timestamptz(6)

@@ -2,9 +2,9 @@
 	import InfiniteLoading from "svelte-infinite-loading";
 	import VirtualList from "svelte-tiny-virtual-list";
 	import Card from "../lib/components/Card.svelte";
-	import type { post } from "@prisma/client";
+	import type { link } from "@prisma/client";
 
-	export let posts: post[];
+	export let links: link[];
 
 	function infiniteHandler({ detail: { complete, error } }) {
 		try {
@@ -48,4 +48,4 @@
 	<InfiniteLoading on:infinite{infiniteHandler} />
 	<div slot="footer" />
 </VirtualList> -->
-<Card postId="a7v5tf" />
+<Card linkId="a7v5tf" />

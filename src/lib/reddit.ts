@@ -1,6 +1,11 @@
 // talk to the reddit api
-import { APP_NAME, APP_VERSION, APP_AUTHOR } from "../app-constants";
-import { getAccessToken } from "$utils/authentication";
+import { getLogger } from "$utils/logging";
+import { APP_AUTHOR, APP_NAME, APP_VERSION } from "../app-constants";
+
+const logger = getLogger("reddit");
+
+const BASE_ENDPOINT = "https://oauth.reddit.com";
+const LINK_ENDPOINT = `${BASE_ENDPOINT}/by_id/t3_`
 
 export interface Link {
 	kind?: string;
@@ -136,16 +141,21 @@ export interface AuthorFlairRichtext {
 	t?: string;
 }
 
-export async function getLink(linkId): Promise<string | Link> {
-	const res = await fetch(`https://oauth.reddit.com/by_id/t3_${linkId}`, {
+export async function getLink(linkId: string, accessToken: string): Promise<Link> {
+	const url = `${LINK_ENDPOINT}${linkId}`
+	const res = await fetch(url, {
 		headers: {
-			Authorization: "bearer " + (await getAccessToken()),
+			Authorization: `bearer ${accessToken}`,
 			"User-Agent": getUserAgent()
 		}
 	});
 
-	if (!res.ok) return res.statusText;
-	return await res.json() as Link;
+	if (!res.ok) {
+		logger.error(`failed to get ${linkId}: ${res.status} ${res.statusText}`);
+		return null;
+	}
+
+	return (await res.json()) as Link;
 }
 
 export interface Image {
@@ -155,7 +165,7 @@ export interface Image {
 	thumbnail_height: number;
 }
 
-export function extractImage(link: Link): (Image | null) {
+export function extractImage(link: Link): Image {
 	if (link.data?.children[0]?.kind == "t3" &&
 		link.data?.children[0]?.data?.url && //
 		link.data?.children[0]?.data?.title && //
@@ -169,6 +179,8 @@ export function extractImage(link: Link): (Image | null) {
 			thumbnail_height: link.data?.children[0]?.data?.thumbnail_height
 		} as Image
 	}
+
+	logger.error(`failed to extract image from link ${link.data?.children[0]?.data?.name}`)
 	return null;
 }
 

@@ -6,10 +6,10 @@
 	async function loadCard(): Promise<Image> {
 		const res: Response = await fetch("/api/image/" + postId);
 
-		if (!res.ok) throw new Error("Failed to load image");
+		if (!res.ok) throw new Error(`Failed to load image: ${res.status} ${res.statusText}`);
 
 		const image: Image = await res.json();
-		if (image == null) throw new Error("Failed to load image");
+		if (image == null) throw new Error("Failed to parse response");
 
 		return image;
 	}
@@ -22,6 +22,6 @@
 		<h1>{card.title}</h1>
 		<img src={card.url} alt="reddit post" />
 	{:catch error}
-		<p>{error}</p>
+		<p>{error.message}</p>
 	{/await}
 </div>

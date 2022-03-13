@@ -1,19 +1,38 @@
 import { extractImage, getLink } from '$lib/reddit';
+import { getAccessToken } from '$utils/authentication';
 import type { Link } from '$lib/reddit';
 
-/** @type {import('./[id]').RequestHandler} */
 export async function get({ params }) {
-	const link = await getLink(params.redditId);
-
-	if (link as Link) {
-		const image = extractImage(link as Link);
+	const accessToken = await getAccessToken();
+	if (!accessToken) {
 		return {
-			body: image
-		}
-	} else {
-		return {
-			status: 400,
-			body: link
+			status: 500,
+			body: {
+				error: 'Authentication failed'
+			}
 		};
+	}
+
+	const link = await getLink(params.redditId, accessToken);
+
+	if (!link) return {
+		status: 404,
+		body: {
+			error: 'Link not found'
+		}
+	};
+
+	const image = extractImage(link as Link);
+	if (!image) {
+		return {
+			status: 404,
+			body: {
+				error: 'Image not found'
+			}
+		};
+	}
+
+	return {
+		body: image
 	}
 }

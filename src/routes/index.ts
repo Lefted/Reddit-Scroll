@@ -1,11 +1,10 @@
-import { PrismaClient } from '@prisma/client';
 import { getLogger } from '$utils/logging';
-import decryptString from '$lib/utils/decryption';
+import prisma from "$lib/prisma"
+import decryptString, { isUnlocked } from '$lib/utils/decryption';
 import type { CipherKey } from 'crypto';
 import type { link } from '@prisma/client';
 
 const logger = getLogger('routes:index');
-const prisma = new PrismaClient();
 
 const keyBuffer: CipherKey = Buffer.from(
 	'e9b11f972afe0fd6129d09d087552564b259b8f42ccb45808e016dd9ccd3d999',
@@ -13,6 +12,16 @@ const keyBuffer: CipherKey = Buffer.from(
 );
 
 export async function get() {
+	if (!isUnlocked()) {
+		logger.info("database is locked, redirecting to /decrypt");
+		return {
+			status: 303,
+			headers: {
+				location: '/decrypt'
+			}
+		}
+	}
+
 	try {
 		const linksEncrypted = await prisma.link.findMany();
 		const links = linksEncrypted.map(async (link) => ({

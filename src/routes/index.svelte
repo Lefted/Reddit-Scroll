@@ -1,51 +1,38 @@
 <script lang="ts">
+	import Card from "$components/Card.svelte";
 	import InfiniteLoading from "svelte-infinite-loading";
 	import VirtualList from "svelte-tiny-virtual-list";
-	import Card from "../lib/components/Card.svelte";
 	import type { link } from "@prisma/client";
 
 	export let links: link[];
 
-	function infiniteHandler({ detail: { complete, error } }) {
-		try {
-			// http request here
+	// let loadedLinks: link[] = links.slice(0, 20);
 
-			const newData = [
-				"G",
-				"H",
-				"I",
-				"J",
-				"K",
-				"L",
-				"M",
-				"N",
-				"O",
-				"P",
-				"Q",
-				"R",
-				"S",
-				"T",
-				"U",
-				"V",
-				"W",
-				"X",
-				"Y",
-				"Z"
-			];
+	/// TODO dont use infinite loading, just use  the virtual list
+	// save data in store, if present dont make another fetch request and load instantly
 
-			// data = [...data, ...newData];
-			complete();
-		} catch (e) {
-			error(e);
-		}
-	}
+	// function infiniteHandler({ detail: { loaded, complete } }) {
+	// 	loadedLinks = [...loadedLinks, ...links.slice(loadedLinks.length, loadedLinks.length + 20)];
+	// 	console.log(loadedLinks);
+
+	// 	if (loadedLinks.length == links.length) {
+	// 		complete();
+	// 		console.log("completet");
+	// 	} else loaded();
+	// }
 </script>
 
-<!-- <VirtualList width="100%" height={600} itemCount={data.length} itemSize={50}>
+<VirtualList width="100%" height={600} itemCount={links.length} itemSize={50}>
 	<div slot="item" let:index let:style {style}>
-		Letter: {data[index]}, Row: #{index}
+		<!-- redditId: {links[index].redditId} -->
+		<Card linkId={links[index].redditId} />
+		<!-- <script>
+			console.log("loading");
+		</script> -->
 	</div>
-	<InfiniteLoading on:infinite{infiniteHandler} />
-	<div slot="footer" />
-</VirtualList> -->
-<Card linkId="a7v5tf" />
+
+	<!-- <div slot="footer">
+		<InfiniteLoading on:infinite{infiniteHandler} />
+	</div> -->
+</VirtualList>
+<!-- <Card linkId="a7v5tf" /> -->

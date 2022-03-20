@@ -1,9 +1,9 @@
-import prisma from "$lib/prisma";
-import decryptString from "$lib/utils/decryption";
-import { saveKey } from "$utils/decryption";
-import { getLogger } from "$lib/utils/logging";
 import type { RequestEvent } from "@sveltejs/kit/types/internal";
 import type { CipherKey } from "crypto";
+import { decryptString } from "$lib/utils/decryption";
+import { saveKey } from "$utils/decryption";
+import { getLogger } from "$lib/utils/logging";
+import prisma from "$lib/prisma";
 
 const logger = getLogger("routes:decrypt");
 
@@ -13,7 +13,7 @@ export async function post({ request }: RequestEvent) {
 	const key = data.key;
 
 	if (!key) {
-		logger.info("key is missing")
+		logger.info("key is missing");
 		return {
 			status: 400,
 			body: {
@@ -41,7 +41,7 @@ export async function post({ request }: RequestEvent) {
 	return {
 		status: 200,
 		body: {
-			"message": "Key accepted"
+			message: "Key accepted"
 		}
 	};
 }

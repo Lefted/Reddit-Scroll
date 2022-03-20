@@ -1,15 +1,9 @@
+import type { link } from "@prisma/client";
 import { getLogger } from "$utils/logging";
 import prisma from "$lib/prisma";
-import decryptString, { isUnlocked } from "$lib/utils/decryption";
-import type { CipherKey } from "crypto";
-import type { link } from "@prisma/client";
+import { decryptString, isUnlocked } from "$lib/utils/decryption";
 
 const logger = getLogger("routes:index");
-
-const keyBuffer: CipherKey = Buffer.from(
-	"e9b11f972afe0fd6129d09d087552564b259b8f42ccb45808e016dd9ccd3d999",
-	"hex"
-);
 
 export async function get() {
 	if (!isUnlocked()) {
@@ -29,7 +23,7 @@ export async function get() {
 				async (link) =>
 					({
 						...link,
-						redditId: await decryptString(link.redditId, keyBuffer)
+						redditId: await decryptString(link.redditId)
 					} as link)
 			)
 		);

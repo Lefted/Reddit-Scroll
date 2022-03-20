@@ -18,22 +18,20 @@
 
 		$linkStore[linkId] = image;
 		return image;
-		// const image =  {
-		// 	thumbnail_height: 60,
-		// 	thumbnail_width: 60,
-		// 	title: "test",
-		// 	url: "https://discountdoorhardware.ca/wp-content/uploads/2016/12/test-product-1.png"
-		// } as Image;
-		// $linkStore[linkId] = image;
-		// return image;
 	}
 </script>
 
-{#await loadCard()}
-	<p>loading..</p>
-{:then card}
-	<h1>{card.title}</h1>
-	<img src={card.url} alt="reddit post" class="object-scale-down w-[45rem]" />
-{:catch error}
-	<p>{error.message}</p>
-{/await}
+<div class="grid justify-center">
+	{#await loadCard()}
+		<div class="min-h-[45rem]">
+			<p>loading..</p>
+		</div>
+	{:then card}
+		<h1>{card.title}</h1>
+		<img src={card.url} alt="reddit post" class="object-scale-down h-[45rem] w-[45rem]" />
+	{:catch error}
+		<div class="min-h-[45rem]">
+			<p>{error.message}</p>
+		</div>
+	{/await}
+</div>

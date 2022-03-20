@@ -1,20 +1,11 @@
 <script lang="ts">
-	import Card from "$components/Card.svelte";
-	import InfiniteLoading from "svelte-infinite-loading";
-	import VirtualList from "svelte-tiny-virtual-list";
 	import type { link } from "@prisma/client";
+	import VirtualList from "svelte-virtual-list-ce";
+	import Card from "$components/Card.svelte";
 
 	export let links: link[];
-
-	let innerHeight;
 </script>
 
-<svelte:window bind:innerHeight />
-
-<div class="list">
-	<VirtualList height={innerHeight - 20} itemCount={links.length} itemSize={500}>
-		<div slot="item" let:index let:style {style}>
-			<Card linkId={links[index].redditId} />
-		</div>
-	</VirtualList>
-</div>
+<VirtualList items={links} let:item height="100vh">
+	<Card linkId={item.redditId} />
+</VirtualList>

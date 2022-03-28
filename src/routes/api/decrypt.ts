@@ -1,8 +1,9 @@
 import type { RequestEvent } from "@sveltejs/kit/types/internal";
 import type { CipherKey } from "crypto";
-import { decryptString } from "$lib/utils/decryption";
-import { saveKey } from "$utils/decryption";
-import { getLogger } from "$lib/utils/logging";
+import { decryptString, saveKey } from "$utils/decryption";
+import { createJWT } from "$utils/jwt";
+import { getLogger } from "$utils/logging";
+import { createCookie } from "$utils/cookies";
 import prisma from "$lib/prisma";
 
 const logger = getLogger("routes:decrypt");
@@ -34,6 +35,11 @@ export async function post({ request }: RequestEvent) {
 		};
 	}
 
+	const username = "soon tm";
+	const jwt = createJWT(username);
+	const cookie = createCookie({ name: "jwt", value: jwt });
+
+	// TODO dont save server-wide
 	saveKey(keyCipher);
 
 	// redirect to main page
@@ -41,7 +47,8 @@ export async function post({ request }: RequestEvent) {
 	return {
 		status: 200,
 		body: {
-			message: "Key accepted"
+			message: "Key accepted",
+			"set-cookie": cookie
 		}
 	};
 }

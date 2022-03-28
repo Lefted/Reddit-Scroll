@@ -1,9 +1,8 @@
 // decrypt a string using a key
-import EnvUtil from "$lib/utils/environment";
 import { createDecipheriv } from "crypto";
 import type { CipherKey, BinaryLike } from "crypto";
 
-const INITIALIZATION_VECTOR = EnvUtil.env("INITIALIZATION_VECTOR");
+const INITIALIZATION_VECTOR = import.meta.env.VITE_INITIALIZATION_VECTOR as string;
 
 const ivBuffer: BinaryLike = Buffer.from(INITIALIZATION_VECTOR, "hex");
 let savedKey: CipherKey;

@@ -1,20 +1,18 @@
 // authentication against reddit api
-import EnvUtil from "$lib/utils/environment";
 import { getUserAgent } from "$lib/reddit";
 import { getLogger } from "$utils/logging";
 
 const logger = getLogger("authentication");
 
-const REDDIT_USERNAME: string = EnvUtil.env("REDDIT_USERNAME");
-const REDDIT_PASSWORD: string = EnvUtil.env("REDDIT_PASSWORD");
-const REDDIT_CLIENT_ID: string = EnvUtil.env("REDDIT_CLIENT_ID");
-const REDDIT_SECRET: string = EnvUtil.env("REDDIT_SECRET");
+const REDDIT_USERNAME = import.meta.env.VITE_REDDIT_USERNAME as string;
+const REDDIT_PASSWORD = import.meta.env.VITE_REDDIT_PASSWORD as string;
+const REDDIT_CLIENT_ID = import.meta.env.VITE_REDDIT_CLIENT_ID as string;
+const REDDIT_SECRET = import.meta.env.VITE_REDDIT_SECRET as string;
 
 const AUTH_BASE_ENDPOINT = "https://www.reddit.com/api/";
 const AUTH_ENDPOINT = `${AUTH_BASE_ENDPOINT}v1/access_token`;
 
 let accessToken: string;
-
 
 export interface AuthResponse {
 	access_token: string;
@@ -25,7 +23,7 @@ export interface AuthResponse {
 }
 
 export async function authenticate(): Promise<string> {
-	logger.info(`requesting accessToken ${AUTH_ENDPOINT}`)
+	logger.info(`requesting accessToken ${AUTH_ENDPOINT}`);
 	const res = await fetch(AUTH_ENDPOINT, {
 		method: "POST",
 		headers: {
@@ -38,7 +36,7 @@ export async function authenticate(): Promise<string> {
 	});
 
 	if (!res.ok) {
-		logger.error(`failed to authenticate: ${res.status} ${res.statusText}`)
+		logger.error(`failed to authenticate: ${res.status} ${res.statusText}`);
 		return null;
 	}
 
@@ -48,5 +46,5 @@ export async function authenticate(): Promise<string> {
 }
 
 export async function getAccessToken(): Promise<string> {
-	return accessToken ?? await authenticate();
+	return accessToken ?? (await authenticate());
 }

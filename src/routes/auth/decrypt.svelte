@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { goto } from "$app/navigation";
-
 	import { getLogger } from "$lib/utils/logging";
 
 	let input: string = "";

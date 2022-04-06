@@ -17,10 +17,11 @@ model link {
 }
 
 model user {
-  id        Int       @id @default(autoincrement())
-  username  String    @unique @db.VarChar(255)
-  password  String    @db.VarChar(255)
-  createdAt DateTime? @default(dbgenerated("timezone('utc'::text, now())")) @db.Timestamp(6)
-  updatedAt DateTime? @default(dbgenerated("timezone('utc'::text, now())")) @db.Timestamp(6)
-  link      link[]
+  id           Int       @id @default(autoincrement())
+  username     String    @unique @db.VarChar(255)
+  passwordHash String    @db.VarChar(255)
+  passwordSalt String    @db.VarChar(255)
+  createdAt    DateTime? @default(dbgenerated("timezone('utc'::text, now())")) @db.Timestamp(6)
+  updatedAt    DateTime? @default(dbgenerated("timezone('utc'::text, now())")) @db.Timestamp(6)
+  link         link[]
 }

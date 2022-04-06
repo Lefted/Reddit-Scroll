@@ -3,6 +3,7 @@ import type { user } from "@prisma/client";
 import prisma from "$lib/prisma";
 import { createJWT } from "$lib/utils/jwt";
 import { createCookie } from "$lib/utils/cookies";
+import { hashString, newSalt } from "$lib/utils/crypt";
 
 export const post: RequestHandler = async ({ request }) => {
 	const data = await request.json();
@@ -18,17 +19,20 @@ export const post: RequestHandler = async ({ request }) => {
 		};
 	}
 
-	// TODO hash and salt password
+	const passwordSalt = newSalt();
+	const passwordHash = hashString(password, passwordSalt);
+
 	// TODO https://blog.logrocket.com/authentication-svelte-using-cookies/
 	// TODO https://github.com/mishrasatyam/blog.satyam.life/blob/main/src/routes/blog/svelte-kit-jwt-auth.md
 	const user: user = await prisma.user.create({
 		data: {
 			username: username,
-			password: password
+			passwordHash: passwordHash,
+			passwordSalt: passwordSalt
 		}
 	});
 
-	const jwt = createJWT(user);
+	const jwt = createJWT(user.username);
 
 	return {
 		status: 201,

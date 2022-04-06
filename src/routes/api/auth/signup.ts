@@ -1,9 +1,8 @@
 import type { RequestHandler } from "@sveltejs/kit";
 import type { user } from "@prisma/client";
-import { getLogger } from "$utils/logging";
 import prisma from "$lib/prisma";
-
-const logger = getLogger("routes:signup");
+import { createJWT } from "$lib/utils/jwt";
+import { createCookie } from "$lib/utils/cookies";
 
 export const post: RequestHandler = async ({ request }) => {
 	const data = await request.json();
@@ -11,7 +10,6 @@ export const post: RequestHandler = async ({ request }) => {
 	const password: string = data.password;
 
 	if (await isUsernameTaken(username)) {
-		logger.info(`username ${username} is already taken`);
 		return {
 			status: 400,
 			body: {
@@ -20,18 +18,22 @@ export const post: RequestHandler = async ({ request }) => {
 		};
 	}
 
+	// TODO hash and salt password
+	// TODO https://blog.logrocket.com/authentication-svelte-using-cookies/
+	// TODO https://github.com/mishrasatyam/blog.satyam.life/blob/main/src/routes/blog/svelte-kit-jwt-auth.md
 	const user: user = await prisma.user.create({
 		data: {
 			username: username,
 			password: password
 		}
 	});
-	
-	// todo sign jwt and send back
+
+	const jwt = createJWT(user);
+
 	return {
 		status: 201,
-		body: {
-			jwt: "Not yet implemented"
+		headers: {
+			"set-cookie": createCookie({ name: "jwt", value: jwt })
 		}
 	};
 };

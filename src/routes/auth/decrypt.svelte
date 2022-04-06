@@ -5,35 +5,35 @@
 	let input: string = "";
 	let error: string;
 
-	async function validateSecret() {
-		const res = await fetch("/api/decrypt", {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json"
-			},
-			body: JSON.stringify({
-				key: input
-			})
-		});
+	// async function validateSecret() {
+	// 	const res = await fetch("/api/decrypt", {
+	// 		method: "POST",
+	// 		headers: {
+	// 			"Content-Type": "application/json"
+	// 		},
+	// 		body: JSON.stringify({
+	// 			key: input
+	// 		})
+	// 	});
 
-		if (!res.ok) {
-			const text = await res.text();
-			const json = JSON.parse(text);
-			if (!json.error) getLogger("decrypt").error(text);
+	// 	if (!res.ok) {
+	// 		const text = await res.text();
+	// 		const json = JSON.parse(text);
+	// 		if (!json.error) getLogger("decrypt").error(text);
 
-			error = json.error;
-			return;
-		}
+	// 		error = json.error;
+	// 		return;
+	// 	}
 
-		error = null;
-		await goto("/");
-	}
+	// 	error = null;
+	// 	await goto("/");
+	// }
 </script>
 
 <div class="grid place-items-center mt-40 md:mt-60 px-2">
 	<div>
 		<h1 class="text-3xl sm:text-4xl font-bold">The database is locked</h1>
-		<form on:submit|preventDefault={validateSecret} class="mt-32">
+		<form on:submit|preventDefault class="mt-32">
 			<label for="key" class="font-bold">Enter key</label>
 			<input
 				type="text"

@@ -8,8 +8,20 @@ datasource db {
 }
 
 model link {
-  id        Int      @id @default(autoincrement())
-  redditId  String?  @db.VarChar(255)
-  createdAt DateTime @db.Timestamptz(6)
-  updatedAt DateTime @db.Timestamptz(6)
+  id        Int       @id @default(autoincrement())
+  redditId  String?   @db.VarChar(255)
+  createdAt DateTime? @default(dbgenerated("timezone('utc'::text, now())")) @db.Timestamp(6)
+  updatedAt DateTime? @default(dbgenerated("timezone('utc'::text, now())")) @db.Timestamp(6)
+  userId    Int?
+  user      user?     @relation(fields: [userId], references: [id])
+}
+
+model user {
+  id           Int       @id @default(autoincrement())
+  username     String    @unique @db.VarChar(255)
+  passwordHash String    @db.VarChar(255)
+  passwordSalt String    @db.VarChar(255)
+  createdAt    DateTime? @default(dbgenerated("timezone('utc'::text, now())")) @db.Timestamp(6)
+  updatedAt    DateTime? @default(dbgenerated("timezone('utc'::text, now())")) @db.Timestamp(6)
+  link         link[]
 }

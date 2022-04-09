@@ -1,9 +1,11 @@
-import type { Link } from "$lib/reddit";
-import { extractImage, getLink } from "$lib/reddit";
+// import type { Link } from "$lib/reddit";
+import { extractImage, getLink, type Link } from "$lib/reddit";
 import { getAccessToken } from "$utils/authentication";
+import type { RequestHandler } from "@sveltejs/kit";
 
-export async function get({ params }) {
+export const get: RequestHandler<{ redditId: string }> = async ({ params }) => {
 	const accessToken = await getAccessToken();
+
 	if (!accessToken) {
 		return {
 			status: 500,
@@ -35,6 +37,6 @@ export async function get({ params }) {
 
 	return {
 		status: 200,
-		body: image
+		body: JSON.stringify(link)
 	};
-}
+};

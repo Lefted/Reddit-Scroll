@@ -3,7 +3,17 @@ import { extractImage, getLink, type Link } from "$lib/reddit";
 import { getAccessToken } from "$utils/authentication";
 import type { RequestHandler } from "@sveltejs/kit";
 
-export const get: RequestHandler<{ redditId: string }> = async ({ params }) => {
+export const get: RequestHandler<{ redditId: string }> = async ({ params, locals }) => {
+	const {username} = locals;
+	if (!username) {
+		return {
+			status: 401,
+			body: {
+				error: "Unauthorized",
+			},
+		}
+	}
+
 	const accessToken = await getAccessToken();
 
 	if (!accessToken) {

@@ -9,3 +9,4 @@
 <!-- <VirtualList items={links} let:item height="100vh">
 	<Card linkId={item.redditId} />
 </VirtualList> -->
+<p>This is the index</p>

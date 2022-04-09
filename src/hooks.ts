@@ -1,6 +1,6 @@
 // verify jwt token and set user in session
+import { getUsername } from "$lib/utils/jwt";
 import type { GetSession, Handle } from "@sveltejs/kit";
-import { getUser } from "$lib/utils/jwt";
 import { parse } from "cookie";
 
 export const handle: Handle = async ({ event, resolve }) => {
@@ -8,9 +8,9 @@ export const handle: Handle = async ({ event, resolve }) => {
 	const cookies = parse(request.headers.get("cookie") || "");
 
 	try {
-		locals.user = cookies.jwt && getUser(cookies.jwt); //this will give decoded value of jwt eg : {username:xyz}
+		locals.username = cookies.jwt && getUsername(cookies.jwt); //this will give decoded value of jwt, eg. : username:xyz
 	} catch (err) {
-		locals.user = undefined;
+		locals.username = undefined;
 	}
 	const response = await resolve(event);
 	return response;
@@ -18,8 +18,6 @@ export const handle: Handle = async ({ event, resolve }) => {
 
 export const getSession: GetSession = ({ locals }) => {
 	return {
-		user: locals.user && {
-			...locals.user
-		}
+		username: locals.username
 	};
 };

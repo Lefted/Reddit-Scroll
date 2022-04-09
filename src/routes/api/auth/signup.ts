@@ -22,8 +22,6 @@ export const post: RequestHandler = async ({ request }) => {
 	const passwordSalt = newSalt();
 	const passwordHash = hashString(password, passwordSalt);
 
-	// TODO https://blog.logrocket.com/authentication-svelte-using-cookies/
-	// TODO https://github.com/mishrasatyam/blog.satyam.life/blob/main/src/routes/blog/svelte-kit-jwt-auth.md
 	const user: user = await prisma.user.create({
 		data: {
 			username: username,
@@ -35,7 +33,7 @@ export const post: RequestHandler = async ({ request }) => {
 	const jwt = createJWT(user.username);
 
 	return {
-		status: 201,
+		status: 200,
 		headers: {
 			"set-cookie": createCookie({ name: "jwt", value: jwt })
 		}

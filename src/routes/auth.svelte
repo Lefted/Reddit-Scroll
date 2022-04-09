@@ -6,7 +6,30 @@
 	let password = "";
 	let error: string;
 
-	async function login() {}
+	async function login() {
+		const res = await fetch("/api/auth/login", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json"
+			},
+			body: JSON.stringify({
+				username: username,
+				password: password
+			})
+		});
+
+		if (!res.ok) {
+			const text = await res.text();
+			const json = JSON.parse(text);
+			if (!json.error) getLogger("auth").error(text);
+
+			error = json.error ?? "Unknown error";
+			return;
+		}
+
+		error = null;
+		window.location = "/me" as string & Location;
+	}
 
 	async function signup() {
 		const res = await fetch("/api/auth/signup", {
@@ -23,14 +46,14 @@
 		if (!res.ok) {
 			const text = await res.text();
 			const json = JSON.parse(text);
-			if (!json.error) getLogger("decrypt").error(text);
+			if (!json.error) getLogger("auth").error(text);
 
-			error = json.error;
+			error = json.error ?? "Unknown error";
 			return;
 		}
 
 		error = null;
-		// await goto("/");
+		window.location = "/me" as string & Location;
 	}
 </script>
 

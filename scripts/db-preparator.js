@@ -7,9 +7,17 @@ const sequelize = new Sequelize(process.env.DATABASE_URL);
 const Link = sequelize.define(
 	"link",
 	{
-		redditId: {
+		redditIdHash: {
 			type: DataTypes.STRING,
-			allowNull: true
+			allowNull: false
+		},
+		redditIdSalt: {
+			type: DataTypes.STRING,
+			allowNull: false
+		},
+		redditIdInitializationVector: {
+			type: DataTypes.STRING,
+			allowNull: false
 		},
 		createdAt: {
 			type: "TIMESTAMP",
@@ -61,8 +69,35 @@ const User = sequelize.define(
 	}
 );
 
-User.hasMany(Link);
-Link.belongsTo(User);
+const Collection = sequelize.define(
+	"collection",
+	{
+		name: {
+			type: DataTypes.STRING,
+			allowNull: false
+		},
+		createdAt: {
+			type: "TIMESTAMP",
+			defaultValue: Sequelize.literal("(now() at time zone 'utc')::timestamp")
+		},
+		updatedAt: {
+			type: "TIMESTAMP",
+			defaultValue: Sequelize.literal("(now() at time zone 'utc')::timestamp")
+		}
+	},
+	{
+		schema: "reddit",
+		freezeTableName: true,
+		timestamps: false,
+		createdAt: false
+	}
+);
+
+User.hasMany(Collection);
+Collection.belongsTo(User);
+
+Collection.hasMany(Link);
+Link.belongsTo(Collection);
 
 async function connectToDB() {
 	try {
@@ -102,10 +137,12 @@ async function registerUpdatedAtFunctionAsTriggerForTable(table) {
 const run = async () => {
 	await connectToDB();
 	await User.sync();
+	await Collection.sync();
 	await Link.sync();
 	await createUpdatedAtFunction();
 	await registerUpdatedAtFunctionAsTriggerForTable("user");
 	await registerUpdatedAtFunctionAsTriggerForTable("link");
+	await registerUpdatedAtFunctionAsTriggerForTable("collection");
 
 	await sequelize.close();
 };

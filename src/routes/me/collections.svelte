@@ -1,0 +1,69 @@
+<script lang="ts">
+	type collection = {
+		name: string;
+		uuid: string;
+		createdAt: Date;
+	};
+
+	export let collections: collection[] = [
+		{
+			createdAt: new Date(),
+			uuid: "1",
+			name: "Collection 1"
+		},
+		{
+			createdAt: new Date(),
+			uuid: "2",
+			name: "Collection 2"
+		}
+	];
+	export let defaultCollection = "2";
+
+	function isDefault(collection: collection) {
+		return collection.uuid === defaultCollection;
+	}
+</script>
+
+<div class="grid place-items-center mt-60 px-2">
+	{#each collections as collection}
+		<div
+			class="mb-11 shadow-lg p-4 shadow-gray-400 rounded-xl w-80 sm:w-[35em] md:w-[40em] {isDefault(
+				collection
+			)
+				? 'border-reddit-blue border-2'
+				: ''}"
+		>
+			<h1 class="text-xl font-bold">{collection.name}</h1>
+			<p class=" pt-1.5 text-gray-800">Created at: {collection.createdAt.toLocaleString()}</p>
+			<div class="flex">
+				<button
+					class="mt-8 bg-reddit-blue hover:bg-reddit-blue-hover text-white rounded h-10 mr-4 px-6 {isDefault(
+						collection
+					)
+						? 'opacity-50 disabled cursor-default hover:bg-reddit-blue'
+						: ''}">Set as default</button
+				>
+				<button
+					class="mt-8 items-center flex gap-3 bg-red-800 hover:bg-red-700 text-white  rounded h-10 px-6"
+				>
+					Delete
+					<svg
+						width="18"
+						height="20"
+						viewBox="0 0 18 20"
+						fill="none"
+						xmlns="http://www.w3.org/2000/svg"
+						class="w-4.5"
+					>
+						<path
+							d="M14 20H4C3.46957 20 2.96086 19.7893 2.58579 19.4142C2.21071 19.0391 2 18.5304 2 18V5H0V3H4V2C4 1.46957 4.21071 0.960859 4.58579 0.585786C4.96086 0.210714 5.46957 0 6 0H12C12.5304 0 13.0391 0.210714 13.4142 0.585786C13.7893 0.960859 14 1.46957 14 2V3H18V5H16V18C16 18.5304 15.7893 19.0391 15.4142 19.4142C15.0391 19.7893 14.5304 20 14 20ZM4 5V18H14V5H4ZM6 2V3H12V2H6Z"
+							fill="white"
+						/>
+					</svg>
+				</button>
+			</div>
+		</div>
+	{/each}
+
+	<button class="py-2 px-8 border-2 bg-green-800 hover:bg-green-700 text-white text-lg rounded-md">New collection</button>
+</div>

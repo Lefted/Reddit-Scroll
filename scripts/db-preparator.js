@@ -59,6 +59,9 @@ const User = sequelize.define(
 		updatedAt: {
 			type: "TIMESTAMP",
 			defaultValue: Sequelize.literal("(now() at time zone 'utc')::timestamp")
+		},
+		defaultCollection: {
+			type: DataTypes.STRING
 		}
 	},
 	{
@@ -75,6 +78,11 @@ const Collection = sequelize.define(
 		name: {
 			type: DataTypes.STRING,
 			allowNull: false
+		},
+		uuid: {
+			type: DataTypes.STRING,
+			allowNull: false,
+			unique: false
 		},
 		createdAt: {
 			type: "TIMESTAMP",

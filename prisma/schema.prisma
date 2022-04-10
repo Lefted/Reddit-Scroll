@@ -19,18 +19,20 @@ model link {
 }
 
 model user {
-  id           Int          @id @default(autoincrement())
-  username     String       @unique @db.VarChar(255)
-  passwordHash String       @db.VarChar(255)
-  passwordSalt String       @db.VarChar(255)
-  createdAt    DateTime?    @default(dbgenerated("timezone('utc'::text, now())")) @db.Timestamp(6)
-  updatedAt    DateTime?    @default(dbgenerated("timezone('utc'::text, now())")) @db.Timestamp(6)
-  collection   collection[]
+  id                Int          @id @default(autoincrement())
+  username          String       @unique @db.VarChar(255)
+  passwordHash      String       @db.VarChar(255)
+  passwordSalt      String       @db.VarChar(255)
+  createdAt         DateTime?    @default(dbgenerated("timezone('utc'::text, now())")) @db.Timestamp(6)
+  updatedAt         DateTime?    @default(dbgenerated("timezone('utc'::text, now())")) @db.Timestamp(6)
+  defaultCollection String?      @db.VarChar(255)
+  collection        collection[]
 }
 
 model collection {
   id        Int       @id @default(autoincrement())
   name      String    @db.VarChar(255)
+  uuid      String    @db.VarChar(255)
   createdAt DateTime? @default(dbgenerated("timezone('utc'::text, now())")) @db.Timestamp(6)
   updatedAt DateTime? @default(dbgenerated("timezone('utc'::text, now())")) @db.Timestamp(6)
   userId    Int?
